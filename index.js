@@ -256,7 +256,7 @@ var MochaReporter = function (baseReporterDecorator, formatError, config) {
      */
     function printItem(item, depth) {
         // only print to output once
-        if (item.name && !item.printed && (!item.skipped || !ignoreSkipped)) {
+        if (item.name && !item.printed && (item.pending || (!item.skipped || !ignoreSkipped ) )) {
             // only print it block when it was ran through all browsers
             if (item.type === 'it' && !item.isCompleted) {
                 return;
@@ -267,7 +267,10 @@ var MochaReporter = function (baseReporterDecorator, formatError, config) {
 
             // it block
             if (item.type === 'it') {
-                if (item.skipped) {
+                if(item.pending){
+                    // print pending tests info
+                    line = colors.warning.print(stripAnsi(line) + ' (pending)');
+                }else if (item.skipped) {
                     // print skipped tests info
                     line = colors.info.print(stripAnsi(line) + ' (skipped)');
                 } else {
@@ -467,6 +470,11 @@ var MochaReporter = function (baseReporterDecorator, formatError, config) {
             item.isRoot = depth === 0;
             item.type = 'describe';
             item.skipped = result.skipped;
+            //https://github.com/karma-runner/karma-jasmine/blob/master/src/adapter.js#L220
+            // it's always the same value as skipped as skipped is derived from
+            // pending. Also the status is not given in result. No chance reading either skipped or pending.
+            item.pending = result.pending;
+
             item.success = (item.success === undefined ? true : item.success) && result.success;
 
             // set item success to true when item is skipped

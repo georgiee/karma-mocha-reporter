@@ -205,6 +205,12 @@ module.exports = function (grunt) {
                     }
                 }
             },
+            pending: {
+                configFile: 'demo/karma.conf.js',
+                options: {
+                    files: ['demo/pending.spec.js']
+                }
+            },
             colors: {
                 configFile: 'demo/karma.conf.js',
                 browsers: ['PhantomJS'],
@@ -283,6 +289,7 @@ module.exports = function (grunt) {
     grunt.registerTask('printNoFailures', ['copy:demo', 'karma:printNoFailures']);
     grunt.registerTask('noColors', ['copy:demo', 'karma:noColors']);
     grunt.registerTask('ignoreSkipped', ['copy:demo', 'karma:ignoreSkipped']);
+    grunt.registerTask('pending', ['copy:demo', 'karma:pending']);
     grunt.registerTask('piped', ['copy:demo', 'shell:karma']);
     grunt.registerTask('colors', ['copy:demo', 'karma:colors']);
     grunt.registerTask('symbols', ['copy:demo', 'karma:symbols']);
